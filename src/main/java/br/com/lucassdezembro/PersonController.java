@@ -1,6 +1,7 @@
 package br.com.lucassdezembro;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +17,7 @@ public class PersonController {
 	@Autowired
 	private PersonService personService;
 
-	@GetMapping("/{id}")
+	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Person getPersonById(@PathVariable(value = "id") String id) {
 		return personService.getPersonById(id);
 	}
