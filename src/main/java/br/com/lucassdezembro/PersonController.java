@@ -1,5 +1,7 @@
 package br.com.lucassdezembro;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,5 +22,10 @@ public class PersonController {
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Person getPersonById(@PathVariable(value = "id") String id) {
 		return personService.getPersonById(id);
+	}
+	
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<Person> getAllPersons() {
+		return personService.getAllPersons();
 	}
 }
