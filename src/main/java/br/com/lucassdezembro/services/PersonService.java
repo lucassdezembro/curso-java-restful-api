@@ -3,6 +3,7 @@ package br.com.lucassdezembro.services;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
@@ -56,5 +57,36 @@ public class PersonService {
 		logger.info(String.format("Person %s found!", counter.get()));
 		
 		return person;
+	}
+
+	public Person createPerson(Person person) {
+		
+		Random random = new Random();
+		
+		Long id = random.nextLong();
+		
+		person.setId(id);
+		
+		logger.info(String.format("Creating person %d", person.getId()));
+		
+		logger.info(String.format("Person %d created!", person.getId()));
+	
+		return person;
+	}
+	
+	public Person updatePerson(Person person) {
+		
+		logger.info(String.format("Updating person %d", person.getId()));
+		
+		logger.info(String.format("Person %d updated!", person.getId()));
+	
+		return person;
+	}
+	
+	public void deletePerson(AtomicLong id) {
+		
+		logger.info(String.format("Updating person %d", id.get()));
+		
+		logger.info(String.format("Person %d updated!", id.get()));
 	}
 }
