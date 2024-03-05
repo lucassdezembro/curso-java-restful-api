@@ -4,5 +4,5 @@ Esse repositório tem como objetivo armazenar e expor toda a minha evolução du
 
 ## Considerações
 
-- Gosto de seguir sempre o mesmo exemplo dado pelos professores, mas também sempre faço algo a mais do que foi passado naquela aula para acelerar ainda mais o processo e exercitar a minha curiosidade.
+- Gosto de seguir sempre o mesmo exemplo dado pelos professores, mas também sempre faço algo a mais do que foi passado naquela aula para acelerar ainda mais o processo e exercitar os conhecimentos adquiridos.
 - Cada módulo/aula do curso é representado por uma branch diferente. Isso significa que, na branch [05_FirstStepsInJavaWithSpringBoot](https://github.com/lucassdezembro/curso-java-restful-api/tree/05_FirstStepsInJavaWithSpringBoot), você encontrará o código referente a aula 05, onde iniciamos a parte prática do projeto.
