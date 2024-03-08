@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.lucassdezembro.exceptions.BadRequestException;
 import br.com.lucassdezembro.model.Person;
 import br.com.lucassdezembro.services.PersonService;
+import br.com.lucassdezembro.utils.VerificationUtils;
 
 @RestController
 @RequestMapping("/persons")
@@ -25,7 +27,12 @@ public class PersonController {
 	private PersonService personService;
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Person getPersonById(@PathVariable(value = "id") String id) {
+	public Person getPersonById(@PathVariable(value = "id") String id) throws Exception {
+		
+		if (!VerificationUtils.isNumber(id)) {
+			throw new BadRequestException("Invalid field 'id'");
+		}
+		
 		return personService.getPersonById(id);
 	}
 	
@@ -38,7 +45,10 @@ public class PersonController {
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE
 	)
-	public Person createPerson(@RequestBody Person person) {
+	public Person createPerson(@RequestBody Person person) throws Exception {
+		if (VerificationUtils.isEmptyOrNull(person.getFirstName())) {
+			throw new BadRequestException("Missing 'person.firstName' parameter.");
+		}
 		return personService.createPerson(person);
 	}
 	
@@ -47,6 +57,9 @@ public class PersonController {
 			produces = MediaType.APPLICATION_JSON_VALUE
 	)
 	public Person updatePerson(@RequestBody Person person) {
+		if (VerificationUtils.isEmptyOrNull(person.getId())) {
+			throw new BadRequestException("Missing 'person.id' parameter.");
+		}
 		return personService.updatePerson(person);
 	}
 	
