@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import br.com.lucassdezembro.exceptions.BadRequestException;
 import br.com.lucassdezembro.exceptions.ExceptionResponse;
+import br.com.lucassdezembro.exceptions.ResourceNotFoundException;
 
 @ControllerAdvice
 @RestController
@@ -33,5 +34,14 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 	) {
 		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), exception.getMessage(), request.getDescription(false));
 		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(ResourceNotFoundException.class)
+	public final ResponseEntity<ExceptionResponse> handleResourceNotFoundExceptions(
+			Exception exception,
+			WebRequest request
+	) {
+		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), exception.getMessage(), request.getDescription(false));
+		return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
 	}
 }

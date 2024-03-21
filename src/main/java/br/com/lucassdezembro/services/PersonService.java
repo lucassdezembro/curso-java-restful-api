@@ -1,92 +1,79 @@
 package br.com.lucassdezembro.services;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.lucassdezembro.errors.ConstantErrors;
+import br.com.lucassdezembro.exceptions.ResourceNotFoundException;
 import br.com.lucassdezembro.model.Person;
+import br.com.lucassdezembro.repositories.PersonRepository;
 
 @Service
 public class PersonService {
 
-	private final AtomicLong counter = new AtomicLong();
 	private Logger logger = Logger.getLogger(PersonService.class.getName());
 	
+	@Autowired
+	PersonRepository personRepository;
+	
 	public List<Person> getAllPersons() {
-		return mockPersons(10);
+		return personRepository.findAll();
 	}
 	
-	private List<Person> mockPersons(int qty) {
-		
-		List<Person> personList = new ArrayList<>();
-		
-		for (int i = 0; i < qty; i ++) {
-			
-			AtomicLong atomicLongId = new AtomicLong(i);
-			
-			Person person = new Person();
-			
-			person.setId(atomicLongId.get());
-			person.setFirstName(String.format("Name %d", i));
-			person.setLastName(String.format("Last Name %d", i));
-			person.setAddress(String.format("Address %d", i));
-			person.setGender(String.format("%d", i));
-			
-			personList.add(person);
-		}
-		
-		return personList;
-	}
-	
-	public Person getPersonById(String id) {
+	public Person getPersonById(Long id) {
 		logger.info("Searching one person...");
 		
-		Person person = new Person();
+	
+		Person person = personRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException(ConstantErrors.noPersonFound));
 		
-		person.setId(counter.incrementAndGet());
-		person.setFirstName("Lucas");
-		person.setLastName("Dezembro");
-		person.setAddress("Nova Odessa - São Paulo - Brasil");
-		person.setGender("M");
-		
-		logger.info(String.format("Person %s found!", counter.get()));
+		logger.info(String.format("Person %s found!", person.getId()));
 		
 		return person;
 	}
 
 	public Person createPerson(Person person) {
 		
-		Random random = new Random();
+		logger.info(String.format("Creating person %d", person.getFirstName()));
 		
-		Long id = random.nextLong();
+		Person createdPerson = personRepository.save(person);
 		
-		person.setId(id);
-		
-		logger.info(String.format("Creating person %d", person.getId()));
-		
-		logger.info(String.format("Person %d created!", person.getId()));
+		logger.info(String.format("Person %d created!", createdPerson.getId()));
 	
-		return person;
+		return createdPerson;
 	}
 	
 	public Person updatePerson(Person person) {
 		
 		logger.info(String.format("Updating person %d", person.getId()));
 		
-		logger.info(String.format("Person %d updated!", person.getId()));
+		Person foundPerson = personRepository.findById(person.getId())
+				.orElseThrow(() -> new ResourceNotFoundException(ConstantErrors.noPersonFound));
+		
+		foundPerson.setFirstName(person.getFirstName());
+		foundPerson.setLastName(person.getLastName());
+		foundPerson.setAddress(person.getAddress());
+		foundPerson.setGender(person.getGender());
+		
+		personRepository.save(foundPerson);
+		
+		logger.info(String.format("Person %d updated!", foundPerson.getId()));
 	
-		return person;
+		return foundPerson;
 	}
 	
-	public void deletePerson(AtomicLong id) {
+	public void deletePerson(Long id) {
 		
-		logger.info(String.format("Updating person %d", id.get()));
+		logger.info(String.format("Deleting person %d", id));
 		
-		logger.info(String.format("Person %d updated!", id.get()));
+		Person foundPerson = personRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException(ConstantErrors.noPersonFound));
+		
+		personRepository.delete(foundPerson);
+		
+		logger.info(String.format("Person %d deleted!", id));
 	}
 }

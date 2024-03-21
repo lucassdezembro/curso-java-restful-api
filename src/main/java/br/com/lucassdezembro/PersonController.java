@@ -27,9 +27,9 @@ public class PersonController {
 	private PersonService personService;
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Person getPersonById(@PathVariable(value = "id") String id) throws Exception {
+	public Person getPersonById(@PathVariable(value = "id") Long id) throws Exception {
 		
-		if (!VerificationUtils.isNumber(id)) {
+		if (!VerificationUtils.isNumber(id.toString())) {
 			throw new BadRequestException("Invalid field 'id'");
 		}
 		
@@ -64,11 +64,12 @@ public class PersonController {
 	}
 	
 	@DeleteMapping(value = "/{id}")
-	public void deletePerson(@PathVariable(value = "id") String id) {
+	public void deletePerson(@PathVariable(value = "id") Long id) {
 		
-		Long longId = Long.parseLong(id);
-		AtomicLong atomicId = new AtomicLong(longId);
+		if (!VerificationUtils.isNumber(id.toString())) {
+			throw new BadRequestException("Invalid field 'id'");
+		}
 		
-		personService.deletePerson(atomicId);
+		personService.deletePerson(id);
 	}
 }
